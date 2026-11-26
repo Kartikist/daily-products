@@ -93,6 +93,124 @@
     }
   }
 
+  // Autocomplete dropdown for location inputs
+  const suggestionsMap = {
+    start: document.getElementById("start-suggestions"),
+    dest: document.getElementById("dest-suggestions")
+  };
+  let activeField = null;
+  let suggestions = [];
+  let highlightedIndex = -1;
+  let debounceTimer = null;
+
+  function createSuggestionItem(item, index) {
+    const li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.setAttribute("aria-index", index);
+    if (index === highlightedIndex) {
+      li.setAttribute("aria-selected", "true");
+      li.classList.add("highlighted");
+    }
+    const label = item.display_name || item.name;
+    li.textContent = label;
+    li.dataset.lat = item.lat;
+    li.dataset.lon = item.lon;
+    li.dataset.name = label;
+    li.addEventListener("click", () => selectSuggestion(item));
+    return li;
+  }
+
+  function renderSuggestions(fieldId, items) {
+    const ul = suggestionsMap[fieldId];
+    ul.innerHTML = "";
+    highlightedIndex = -1;
+    if (!items || items.length === 0) {
+      ul.classList.remove("show");
+      return;
+    }
+    items.forEach((item, i) => {
+      ul.appendChild(createSuggestionItem(item, i));
+    });
+    ul.classList.add("show");
+  }
+
+  function selectSuggestion(item) {
+    if (!activeField) return;
+    document.getElementById(activeField).value = item.display_name || item.name;
+    suggestionsMap[activeField].classList.remove("show");
+    suggestions = [];
+    highlightedIndex = -1;
+  }
+
+  function fetchSuggestions(query, fieldId) {
+    if (query.length < 2) {
+      suggestionsMap[fieldId].classList.remove("show");
+      return;
+    }
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          "https://nominatim.openstreetmap.org/search?format=json&limit=8&viewbox=-180,-90,180,90&bounded=0&q=" +
+          encodeURIComponent(query),
+          { headers: { "Accept": "application/json" } }
+        );
+        if (!res.ok) throw new Error("Suggestions failed");
+        const data = await res.json();
+        suggestions = data || [];
+        renderSuggestions(fieldId, suggestions);
+      } catch (err) {
+        suggestionsMap[fieldId].classList.remove("show");
+      }
+    }, 200);
+  }
+
+  function setupAutocomplete(fieldId) {
+    const input = document.getElementById(fieldId);
+    const ul = suggestionsMap[fieldId];
+
+    input.addEventListener("input", (e) => {
+      activeField = fieldId;
+      fetchSuggestions(e.target.value, fieldId);
+    });
+
+    input.addEventListener("focus", () => {
+      activeField = fieldId;
+      if (suggestions.length > 0) ul.classList.add("show");
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (!ul.classList.contains("show")) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, suggestions.length - 1);
+        renderSuggestions(fieldId, suggestions);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, -1);
+        renderSuggestions(fieldId, suggestions);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+          selectSuggestion(suggestions[highlightedIndex]);
+        }
+      } else if (e.key === "Escape") {
+        ul.classList.remove("show");
+      }
+    });
+  }
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".field")) {
+      suggestionsMap.start.classList.remove("show");
+      suggestionsMap.dest.classList.remove("show");
+    }
+  });
+
+  setupAutocomplete("start");
+  setupAutocomplete("dest");
+
   function showError(msg) {
     errorMsg.textContent = msg;
     errorMsg.classList.remove("hidden");

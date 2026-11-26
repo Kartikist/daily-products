@@ -21,15 +21,17 @@
         <div class="field">
           <label for="start">Starting location</label>
           <div class="input-row">
-            <input type="text" id="start" placeholder="e.g. Brooklyn, NY" required />
+            <input type="text" id="start" placeholder="e.g. Brooklyn, NY" required autocomplete="off" />
             <button type="button" class="btn-icon" id="btn-use-location" aria-label="Use my current location">📍</button>
           </div>
+          <ul id="start-suggestions" class="suggestions" role="listbox"></ul>
           <p class="hint">Leave blank to use your current location.</p>
         </div>
 
         <div class="field">
           <label for="destination">Destination</label>
-          <input type="text" id="destination" placeholder="e.g. Manhattan, NY" required />
+          <input type="text" id="destination" placeholder="e.g. Manhattan, NY" required autocomplete="off" />
+          <ul id="dest-suggestions" class="suggestions" role="listbox"></ul>
         </div>
 
         <div class="field">
