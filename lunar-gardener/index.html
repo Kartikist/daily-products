@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lunar Gardener — Plant by the Moon</title>
+  <meta name="description" content="See the current moon phase and what to plant today. A free lunar gardening guide. No login required." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="container" id="main">
+    <header>
+      <h1>🌙 Lunar Gardener</h1>
+      <p class="tagline">Plant by the moon. Grow with the cycle.</p>
+      <p class="location">
+        <span id="loc-label">Local date:</span>
+        <time id="local-date"></time>
+      </p>
+    </header>
+
+    <main>
+      <article class="moon-card" aria-labelledby="phase-name">
+        <div class="moon-display" role="region" aria-label="Current moon phase">
+          <div class="moon-svg-container" id="moon-svg"></div>
+          <div class="phase-info">
+            <h2 id="phase-name">Calculating…</h2>
+            <p id="phase-percent" class="illumination">Illumination: <span id="illum-value">–</span>%</p>
+            <p id="phase-day" class="cycle-day">Day <span id="cycle-day">–</span> of 29.5</p>
+          </div>
+        </div>
+
+        <section class="advice-section">
+          <h3>🌱 What to do today</h3>
+          <div class="advice-card" id="advice-card">
+            <div class="advice-action" id="advice-action">–</div>
+            <p id="advice-detail">–</p>
+          </div>
+        </section>
+
+        <section class="plants-section">
+          <h3>🥕 Suggested plants</h3>
+          <ul class="plant-list" id="plant-list">
+            <li role="status">Loading…</li>
+          </ul>
+        </section>
+      </article>
+
+      <button class="btn btn-primary" id="btn-today">Today's phase</button>
+    </main>
+
+    <footer>
+      <p class="disclaimer">Based on lunar-cycle approximations and biodynamic gardening traditions. Not a substitute for local agricultural advice.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
