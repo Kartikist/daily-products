@@ -145,6 +145,7 @@
   document.getElementById("btn-random").addEventListener("click", handleRandom);
   document.getElementById("btn-share").addEventListener("click", handleShare);
   moonEl.addEventListener("click", handleToday);
+  shadowEl.addEventListener("click", handleToday);
 
   updateLocalDate();
   handleToday();
