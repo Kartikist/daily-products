@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShadeSide — Which side of the car to sit on</title>
+  <meta name="description" content="Enter start, destination, and departure time. See which side of the car to sit on to avoid sun glare. No login required." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="container" id="main">
+    <header>
+      <h1>☀️ ShadeSide</h1>
+      <p class="tagline">Which side of the car to sit on to stay out of the sun.</p>
+    </header>
+
+    <main>
+      <form id="trip-form" class="trip-form" novalidate>
+        <div class="field">
+          <label for="start">Starting location</label>
+          <div class="input-row">
+            <input type="text" id="start" placeholder="e.g. Brooklyn, NY" required />
+            <button type="button" class="btn-icon" id="btn-use-location" aria-label="Use my current location">📍</button>
+          </div>
+          <p class="hint">Leave blank to use your current location.</p>
+        </div>
+
+        <div class="field">
+          <label for="destination">Destination</label>
+          <input type="text" id="destination" placeholder="e.g. Manhattan, NY" required />
+        </div>
+
+        <div class="field">
+          <label for="when">Departure time</label>
+          <input type="datetime-local" id="when" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btn-check">Find my shady side</button>
+      </form>
+
+      <div id="result" class="result-card hidden" aria-live="polite">
+        <div class="sun-compass" role="region" aria-label="Sun position relative to your travel direction">
+          <div class="compass-ring">
+            <div class="compass-label n">N</div>
+            <div class="compass-label e">E</div>
+            <div class="compass-label s">S</div>
+            <div class="compass-label w">W</div>
+            <div class="travel-arrow" id="travel-arrow" title="Your direction of travel"></div>
+            <div class="sun-marker" id="sun-marker" title="Sun position"></div>
+          </div>
+          <p class="compass-hint">You travel →&nbsp; Sun is ↳</p>
+        </div>
+
+        <div class="verdict">
+          <h2 id="verdict-text">Sit on the <span id="side-word">left</span> side</h2>
+          <p id="verdict-detail">The sun will be on your <span id="sun-position-word">right</span>, so the <span id="shade-side-word">left</span> side stays in shade.</p>
+          <div class="glare-risk">
+            <span class="glare-label">Glare risk:</span>
+            <span class="glare-value" id="glare-value">Low</span>
+          </div>
+        </div>
+
+        <div class="trip-summary">
+          <p><strong>From:</strong> <span id="summary-from">–</span></p>
+          <p><strong>To:</strong> <span id="summary-to">–</span></p>
+          <p><strong>When:</strong> <span id="summary-when">–</span></p>
+          <p><strong>Direction of travel:</strong> <span id="summary-bearing">–</span></p>
+        </div>
+      </div>
+
+      <div id="error" class="error-msg hidden"></div>
+    </main>
+
+    <footer>
+      <p>No login. No paywall. Works offline after load.</p>
+      <p class="disclaimer">Sun position is an estimate. Always drive safely and follow local traffic laws.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
